@@ -1,124 +1,127 @@
-# Rozdział 01: What Ever Are We Doing?
+# Rozdział 01: Co my tu w ogóle robimy?
 
-## Introductions
+## Wprowadzenie
 
-Hi there! I'm Professor Franklin Frisby. Pleased to make your acquaintance. We'll be spending some time together, as I'm supposed to teach you a bit about functional programming. But enough about me, what about you? I'm hoping that you're at least a bit familiar with the JavaScript language, have a teensy bit of Object-Oriented experience, and fancy yourself a working class programmer. You don't need to have a PhD in Entomology, you just need to know how to find and kill some bugs.
+Cześć! Jestem profesor Franklin Frisby i jest mi niezmiernie miło Cię poznać. Spędzimy razem trochę czasu, bo podobno mam Cię nauczyć nieco programowania funkcyjnego. No, to tyle o mnie, teraz skupmy się na Tobie. Mam nadzieję, że znasz chociaż trochę JavaScript, masz zdeczko doświadczenia z programowaniem orientowanym obiektowo i szczycisz się zawodem programisty bądź programistki. Nie musisz mieć doktoratu z entomologii, ale musisz wiedzieć jak znaleźć i zabić niektóre _bugi_.
 
-I won't assume that you have any previous functional programming knowledge, because we both know what happens when you assume. I will, however, expect you to have run into some of the unfavorable situations that arise when working with mutable state, unrestricted side effects, and unprincipled design. Now that we've been properly introduced, let's get on with it.
+Nie będą zakładać, że posiadasz jakiekolwiek doświadczenie z programowaniem funkcyjnym, bo wszyscy wiemy co się dzieje, gdy się za dużo założy, no nie? Natomiast spodziewam się, że na pewno przydarzyło Ci się znaleźć w wielu nieprzyjemnych sytuacjach związanych z mutowalnym stanem, niczym nieograniczonymi efektami ubocznymi i złą architekturą kodu. Skoro już się poznaliśmy, to zaczynajmy!
 
-The purpose of this chapter is to give you a feel for what we're after when we write functional programs. In order to be able to understand the following chapters, we must have some idea about what makes a program *functional*. Otherwise we'll find ourselves scribbling aimlessly, avoiding objects at all costs - a clumsy endeavor indeed. We need a clear bullseye to hurl our code at, some celestial compass for when the waters get rough.
+Celem tego rozdziału jest uświadomienie Ci, jaki jest powód pisania kodu funkcyjnie i czego poszukujemy. Aby zrozumieć kolejne rozdziały, konieczne jest rozumienie co to w ogóle oznacza, że program jest *funkcyjny*. Bez tego możemy łatwo znaleźć się w sytuacji, w której piszemy kod bez głębszego przemyślenia, po prostu unikając używania obiektów, a to nie będzie najmądrzejsze przedsięwzięcie. Musimy widzieć jasno i wyraźnie cele i powody pisania kodu w stylu funkcyjnym.
 
-Now, there are some general programming principles - various acronymic credos that guide us through the dark tunnels of any application: DRY (don't repeat yourself), YAGNI (ya ain't gonna need it), loose coupling high cohesion, the principle of least surprise, single responsibility, and so on.
+Są pewne ogólne zasady programowania; różne skrótowce, które mają nas prowadzić przez meandry tworzenia aplikacji: DRY (_don't repeat yourself_, czyli niepowtarzaj kodu), YAGNI (_ya ain't gonna need it_, czyli nie twórz rzeczy niepotrzebnych),  _loose coupling high cohesion_ (mało silnych powiązań, ale dużo spójności), _the principle of least surprise_ (zasada tworzenia kodu, który nie zaskakuje), SRP (_single responsibility principle_, czyli nigdy nie powinno być więcej niż jednego powodu do zmiany danego kodu) i tak dalej…
 
-I won't belabor you by listing each and every guideline I've heard throughout the years... The point of the matter is that they hold up in a functional setting, although they're merely tangential to our ultimate goal. What I'd like you to get a feel for now, before we get any further, is our intention when we poke and prod at the keyboard; our functional Xanadu.
+Nie będę Cię zanudzał próbując wypisać każdą złotą zasadę, o której słyszałem przez te wszystkie lata… Chodzi mi tylko o to, że te wszystkie pojęcia nadal mają sens w programowaniu funkcyjnym, mimo że nie są one naszym głównym celem.
+
+Zanim przejdziemy dalej, chciałbym aby było jasne, jaka jest nasza intencja, gdy klepiemy w klawiaturę; nasza funkcyjna bursztynowa komnata.
 
 <!--BREAK-->
 
-## A Brief Encounter
+## Pierwsze spotkanie
 
-Let's start with a touch of insanity. Here is a seagull application. When flocks conjoin they become a larger flock, and when they breed, they increase by the number of seagulls with whom they're breeding. Now, this is not intended to be good Object-Oriented code, mind you, it is here to highlight the perils of our modern, assignment based approach. Behold:
+Zacznijmy od źdźbła absurdu: mamy tutaj aplikację dla mew. Gdy stada ptaków się łączą, to tworzą większe stada, a gdy się rozmnażają, to ich liczba rośnie proporcjonalnie do liczby biorących w tym udział. Ważne! To co za chwilę zobaczysz bynajmniej nie ma być przykładem wspaniałego obiektowego kodu. Chcę tylko podkreślić najważniejsze aspekty współczesnego popularnego programowania. Spójrz:
 
 ```js
-class Flock {
+class Stado {
   constructor(n) {
-    this.seagulls = n;
+    this.mewy = n;
   }
 
-  conjoin(other) {
-    this.seagulls += other.seagulls;
+  połącz(inne) {
+    this.mewy += inne.mewy;
     return this;
   }
 
-  breed(other) {
-    this.seagulls = this.seagulls * other.seagulls;
+  rozmnażaj(inne) {
+    this.mewy = this.mewy * inne.mewy;
     return this;
   }
 }
 
-const flockA = new Flock(4);
-const flockB = new Flock(2);
-const flockC = new Flock(0);
-const result = flockA
-  .conjoin(flockC)
-  .breed(flockB)
-  .conjoin(flockA.breed(flockB))
-  .seagulls;
+const stadoA = new Stado(4);
+const stadoB = new Stado(2);
+const stadoC = new Stado(0);
+const result = stadoA
+  .połącz(stadoC)
+  .rozmnażaj(stadoB)
+  .połącz(stadoA.rozmnażaj(stadoB))
+  .mewy;
 // 32
 ```
 
-Who on earth would craft such a ghastly abomination? It is unreasonably difficult to keep track of the mutating internal state. And, good heavens, the answer is even incorrect! It should have been `16`, but `flockA` wound up permanently altered in the process. Poor `flockA`. This is anarchy in the I.T.! This is wild animal arithmetic!
+Po kiego grzyba ktoś miałby stworzyć taką upiorną obrzydliwość?! Nadążanie za zmianami w mutowalnym stanie w środku tej klasy jest niezwykle trudne. I do chrzanu z taką robotą, bo przecież nawet wynik jest błędny! Powinno wyjść `16`, ale `stadoA` zostało po drodze zmutowane. Biedne `stadoA`. To jest anarchia w IT! Dzika zwierzęca arytmetyka!
 
-If you don't understand this program, it's okay, neither do I. The point to remember here is that state and mutable values are hard to follow, even in such a small example.
+Jeśli nie rozumiesz powyższego kodu, to nic, bo ja też go nie rozumiem. Sednem jest to, żeby pamiętać, że mutowalny stan jest bardzo trudny do ogarnięcia, nawet w tak małej aplikacji.
 
-Let's try again, this time using a more functional approach:
+Spróbujmy jeszcze raz, ale tym razem w bardziej funkcyjny sposób:
 
 ```js
-const conjoin = (flockX, flockY) => flockX + flockY;
-const breed = (flockX, flockY) => flockX * flockY;
+const połącz = (stadoX, stadoY) => stadoX + stadoY;
+const rozmnażaj = (stadoX, stadoY) => stadoX * stadoY;
 
-const flockA = 4;
-const flockB = 2;
-const flockC = 0;
+const stadoA = 4;
+const stadoB = 2;
+const stadoC = 0;
 const result =
-    conjoin(breed(flockB, conjoin(flockA, flockC)), breed(flockA, flockB));
+    połącz(rozmnażaj(stadoB, połącz(stadoA, stadoC)), rozmnażaj(stadoA, stadoB));
 // 16
 ```
 
-Well, this time we got the right answer. With much less code. The function nesting is a tad confusing... (we'll remedy this situation in ch5). It's better, but let's dig a little bit deeper. There are benefits to calling a spade a spade. Had we scrutinized our custom functions more closely, we would have discovered that we're just working with simple addition (`conjoin`) and multiplication (`breed`).
+Cóż, tym razem wynik jest prawidłowy. I kodu znacznie mniej. To zagnieżdżenie funkcji jest jednak nieco mylące (ale poradzimy coś na to w rozdziale 5). Na pewno to rozwiązanie jest lepsze od poprzedniego, ale przyjrzyjmy się temu nieco bardziej. Są powody, aby nazywać rzeczy po imieniu, a gdybyśmy zbadali nasze funkcje bliżej, to odkrylibyśmy, że to, co tutaj robimy, to zwykłe dodawanie (`połącz`) i mnożenie (`rozmnażaj`).
 
-There's really nothing special at all about these two functions other than their names. Let's rename our custom functions to `multiply` and `add` in order to reveal their true identities.
+Nie ma absolutnie nic szczególnego w tych dwóch funkcjach poza ich nazwami. Przemianujmy je na `add` i `multiply`, aby odsłonić ich prawdziwe tożsamości (nota od tłumacza: od tej pory będziemy używać raczej angielskich nazw zmiennych i funkcji).
 
 ```js
 const add = (x, y) => x + y;
 const multiply = (x, y) => x * y;
 
-const flockA = 4;
-const flockB = 2;
-const flockC = 0;
+const stadoA = 4;
+const stadoB = 2;
+const stadoC = 0;
 const result =
-    add(multiply(flockB, add(flockA, flockC)), multiply(flockA, flockB));
+    add(multiply(stadoB, add(stadoA, stadoC)), multiply(stadoA, stadoB));
 // 16
 ```
-And with that, we gain the knowledge of the ancients:
+
+Tym sposobem zdobywamy wiedzę starożytnych:
 
 ```js
-// associative
+// łączność (associative)
 add(add(x, y), z) === add(x, add(y, z));
 
-// commutative
+// przemienność (commutative)
 add(x, y) === add(y, x);
 
-// identity
+// element neutralny (identity)
 add(x, 0) === x;
 
-// distributive
+// rozdzielność (distributive)
 multiply(x, add(y,z)) === add(multiply(x, y), multiply(x, z));
 ```
 
-Ah yes, those old faithful mathematical properties should come in handy. Don't worry if you didn't know them right off the top of your head. For a lot of us, it's been a while since we learned about these laws of arithmetic. Let's see if we can use these properties to simplify our little seagull program.
+Ah tak, stare poczciwe zasady matematyki mogą nam się przydać. Nie martw się, jeśli nie masz ich wykutych na blachę. Dla większości z nas będzie to dobrych kilka lat od ostatniego spotkania z prawami arytmetyki. Sprawdźmy, czy uda nam się jakoś wykorzystać tę wiedzę do uproszczenia naszego mewiego programu:
 
 ```js
-// Original line
-add(multiply(flockB, add(flockA, flockC)), multiply(flockA, flockB));
+// Oryginalnie
+add(multiply(stadoB, add(stadoA, stadoC)), multiply(stadoA, stadoB));
 
-// Apply the identity property to remove the extra add
-// (add(flockA, flockC) == flockA)
-add(multiply(flockB, flockA), multiply(flockA, flockB));
+// Element netrualny (stadoC) sprawia, że możemy usunąć zbędne add
+// (add(stadoA, stadoC) == stadoA)
+add(multiply(stadoB, stadoA), multiply(stadoA, stadoB));
 
-// Apply distributive property to achieve our result
-multiply(flockB, add(flockA, flockA));
+// Rozdzielność mnożenia względem dodawania
+multiply(stadoB, add(stadoA, stadoA));
 ```
 
-Brilliant! We didn't have to write a lick of custom code other than our calling function. We include `add` and `multiply` definitions here for completeness, but there is really no need to write them - we surely have an `add` and `multiply` provided by some existing library.
+Genialnie! Nie musieliśmy pisać ani kawałeczka nowego kodu poza wywołaniami naszych funkcji. Zdefiniowaliśmy wcześniej `add` i `multiply` dla spójności tego przykładu, ale biblioteki standardowe większości języków programowania na pewno mają te funkcje już wbudowane.
 
-You may be thinking "how very strawman of you to put such a mathy example up front". Or "real programs are not this simple and cannot be reasoned about in such a way." I've chosen this example because most of us already know about addition and multiplication, so it's easy to see how math is very useful for us here.
+Możesz teraz myśleć „przeinaczyłeś argumenty przeciwnika, aby łatwiej było ci go zaatakować i pokazałeś taki matematyczny przykład” albo „prawdziwe programy tak nie wyglądają i nie da się ich tak łatwo przekształcać”. Wybrałem ten przykład celowo, bo większość z nas rozumie dodawanie i mnożenie, więc prosto było dostrzeżec, że matematyka jest tutaj dla nas bardzo przydatna.
 
-Don't despair - throughout this book, we'll sprinkle in some category theory, set theory, and lambda calculus and write real world examples that achieve the same elegant simplicity and results as our flock of seagulls example. You needn't be a mathematician either. It will feel natural and easy, just like you were using a "normal" framework or API.
+Nie rozpaczaj! W tej książce znajdziesz fragmenty teorii kategorii, teorii zbiorów, rachunku lambda i osiągniesz podobny poziom prostoty w prawdziwych, z życia wziętych programach, jak w aplikacji dla mew. Ale to nie oznacza, że konieczna jest magisterka z matematyki! Wszystko będzie się wydawało naturalne i proste, zupełnie jak korzystanie z nowego „normalnego” frameworka lub API.
 
-It may come as a surprise to hear that we can write full, everyday applications along the lines of the functional analog above. Programs that have sound properties. Programs that are terse, yet easy to reason about. Programs that don't reinvent the wheel at every turn. Lawlessness is good if you're a criminal, but in this book, we'll want to acknowledge and obey the laws of math.
+Dla wielu będzie zaskoczeniem, że da się pisać rozbudowane aplikacje w sposób funkcyjny podobny do tego powyżej. Aplikacje, które są poprawne (ang. _sound_) . Aplikacje, które są zwięzłe, ale proste do zrozumienia. Aplikacje, które nie wymyślają koła na nowo na każdym rogu. Samowolka jest dobra dla przestępców, ale w tej książce będziemy chcieli poznać i skrupulatnie przestrzegać praw matematyki.
 
-We'll want to use a theory where every piece tends to fit together so politely. We'll want to represent our specific problem in terms of generic, composable bits and then exploit their properties for our own selfish benefit. It will take a bit more discipline than the "anything goes" approach of imperative programming (we'll go over the precise definition of "imperative" later in the book, but for now consider it anything other than functional programming). The payoff of working within a principled, mathematical framework will truly astound you.
+Będziemy korzystać z teorii, w których każdy element pasuje do siebie jak ulał. Będziemy przedstawiać konkretne problemy w postaci uniwersalnych, małych i komponowalnych kawałków, a później wykorzystywać ich własności do cna tylko dla naszych niecnych celów. Będzie to wymagało nieco więcej dyscypliny niż typowe „zrób żeby działało” z programowania imperatywnego (dokładną definicję słowa „imperatywny” omówimy dalej, a na razie przyjmijmy, że imperatywne jest wszystko to, co nie jest funkcyjne). Praca z prawami matematyki przyniesie Ci tak gigantyczny zwrot z inwestycji, że zamienisz się w słup soli.
 
-We've seen a flicker of our functional northern star, but there are a few concrete concepts to grasp before we can really begin our journey.
+Widzieliśmy migotanie gwiazdy polarnej programowania funkcyjnego. Teraz musimy dokładnie omówić kilka teoretycznych pojęć, aby móc wyruszyć w dalszą podróż.
 
-[Rozdział 02: First Class Functions](ch02-pl.md)
+[Rozdział 02: Funkcje pierwszej klasy](ch02-pl.md)
