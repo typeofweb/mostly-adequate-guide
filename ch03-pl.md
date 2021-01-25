@@ -1,17 +1,17 @@
-# Rozdział 03: Pure Happiness with Pure Functions
+# Rozdział 03: Czysta radość z czystych funkcji
 
-## Oh to Be Pure Again
+## Mam czystą buzię, jestem uczesany, na koszulce nie mam żadnej tłustej plamy
 
-One thing we need to get straight is the idea of a pure function.
+Jedna rzecz, którą natychmiast musimy sobie wyjaśnić to idea czystych funkcji.
 
->A pure function is a function that, given the same input, will always return the same output and does not have any observable side effect.
+> Czysta funkcja to taka funkcja, która, gdy otrzyma ten sam zestaw danych wejściowych, zawsze zwróci dokładnie ten sam wynik oraz nie posiada żadnych obserwowalnych skutków ubocznych.
 
-Take `slice` and `splice`. They are two functions that do the exact same thing - in a vastly different way, mind you, but the same thing nonetheless. We say `slice` is *pure* because it returns the same output per input every time, guaranteed. `splice`, however, will chew up its array and spit it back out forever changed which is an observable effect.
+Weźmy `slice` i `splice`. Są to dwie funkcje, które z grubsza robią to samo, co prawda w zasadniczo inny sposób, no ale jednak. Mówi się, że `slice` jest *czysta* ponieważ zwraca ten sam rezultat dla tego samego argumentu, kropka. Natomiast `splice` przeżuwa podaną tablicę i wypluwa na zawsze odmienioną – to właśnie jest obserwowalny skutek uboczny.
 
 ```js
 const xs = [1,2,3,4,5];
 
-// pure
+// czysta
 xs.slice(0,3); // [1,2,3]
 
 xs.slice(0,3); // [1,2,3]
@@ -19,7 +19,7 @@ xs.slice(0,3); // [1,2,3]
 xs.slice(0,3); // [1,2,3]
 
 
-// impure
+// nieczysta
 xs.splice(0,3); // [1,2,3]
 
 xs.splice(0,3); // [4,5]
@@ -27,85 +27,80 @@ xs.splice(0,3); // [4,5]
 xs.splice(0,3); // []
 ```
 
-In functional programming, we dislike unwieldy functions like `splice` that *mutate* data. This will never do as we're striving for reliable functions that return the same result every time, not functions that leave a mess in their wake like `splice`.
+W programowaniu funkcyjnym nie lubimy się z funkcjami takimi jak `splice`, które *mutują* dane. Dążymy do rzetelnych funkcji, na których można polegać i po których zawsze wiemy czego się spodziewać, a nie funkcji jak `splice`, które wiecznie zostawiają za sobą bałagan.
 
-Let's look at another example.
+Spójrzmy na kolejny przykład:
 
 ```js
-// impure
+// nieczysta
 let minimum = 21;
 const checkAge = age => age >= minimum;
 
-// pure
+// czysta
 const checkAge = (age) => {
   const minimum = 21;
   return age >= minimum;
 };
 ```
 
-In the impure portion, `checkAge` depends on the mutable variable `minimum` to determine the result. In other words, it depends on system state which is disappointing because it increases the [cognitive load](https://en.wikipedia.org/wiki/Cognitive_load) by introducing an external environment.
+W nieczystym kodzie, `checkAge` korzysta z mutowalnej wartości `minimum`, aby zwrócić wynik. Innymi słowy, funkcja ta zależy od stanu systemu (od kontekstu), co jest niezadowalające, gdyż znacząco zwiększa [obciążenie poznawcze](https://en.wikipedia.org/wiki/Cognitive_load).
 
-It might not seem like a lot in this example, but this reliance upon state is one of the largest contributors to system complexity (http://curtclifton.net/papers/MoseleyMarks06a.pdf). This `checkAge` may return different results depending on factors external to input, which not only disqualifies it from being pure, but also puts our minds through the wringer each time we're reasoning about the software.
+W powyższym przykładzie może to wyglądać na błahy problem, jednak uzależnienie od stanu jest jednym z najważniejszych elementów przyczyniających się do wzrostu złożoności systemu (http://curtclifton.net/papers/MoseleyMarks06a.pdf). `checkAge` w pierwszym wariancie może zwracać różne wyniki w zależności od czynników zewnętrznych, a to nie tylko dyskwalifikuje ją z określenia mianem „czysta”, ale też przepycha nasz mózg przez wyżymaczkę ilekroć chcemy w myślach ustalić rezultat wywołania tej funkcji.
 
-Its pure form, on the other hand, is completely self sufficient. We can  also make `minimum` immutable, which preserves the purity as the state will never change. To do this, we must create an object to freeze.
+Natomiast czysta postać `checkAge` jest całkowicie samowystarczalna.
 
-```js
-const immutableState = Object.freeze({ minimum: 21 });
-```
+## Skutki uboczne mogą…
 
-## Side Effects May Include...
+Przyjrzyjmy się bliżej tym „skutkom ubocznym”, aby poprawić naszą intuicję. Czymże jest jest ten nikczemny *skutek uboczny* wspomniany w definicji *czystej funkcji*? Skutkiem (albo efektem) nazwiemy wszystko, co nie jest bezpośrednio związane z wyliczeniem wyniku funkcji.
 
-Let's look more at these "side effects" to improve our intuition. So what is this undoubtedly nefarious *side effect* mentioned in the definition of *pure function*? We'll be referring to *effect* as anything that occurs in our computation other than the calculation of a result.
+Nie ma nic inherentnie złego w samych skutkach i będziemy ich używać na każdym kroku w nadchodzących rozdziałach. To słówko *uboczny* niesie ze sobą negatywne skojarzenia. Woda sama w sobie nie zawsze jest siedliskiem komarów. Dopiero „stojąca woda” staje się idealnym środowiskiem dla milionów krwiopijców. Zapewniam cię, że efekty *uboczne* są podobnym terenem lęgowym dla wszelkiego robactwa w Twoich programach.
 
-There's nothing intrinsically bad about effects and we'll be using them all over the place in the chapters to come. It's that *side* part that bears the negative connotation. Water alone is not an inherent larvae incubator, it's the *stagnant* part that yields the swarms, and I assure you, *side* effects are a similar breeding ground in your own programs.
+> *Skutek uboczny* to zmiana stanu systemu lub *obserwowalna interakcja* ze światem zewnętrznym, która ma miejsce podczast obliczania wyniku funkcji.
 
->A *side effect* is a change of system state or *observable interaction* with the outside world that occurs during the calculation of a result.
+Skutki uboczne mogą zawierać, ale nie ograniczają się do:
 
-Side effects may include, but are not limited to
+  * modyfikowania plików
+  * zapisywania rekordów w bazie danych
+  * wykonania żądania HTTP
+  * mutacji
+  * wypisywania na ekranie (logowania)
+  * pobierania danych od użytkownika
+  * szukania elementów DOM
+  * odczytawania stanu systemu
 
-  * changing the file system
-  * inserting a record into a database
-  * making an http call
-  * mutations
-  * printing to the screen / logging
-  * obtaining user input
-  * querying the DOM
-  * accessing system state
+Lista jest długa. Jakakolwiek interakcja ze światem poza ciałem funkcji jest skutkiem ubocznym i jest to fakt, który może skłonić Cię do podważania praktyczności programowania bez skutków ubocznych w ogóle. Filozofia programowania funkcyjnego postuluje, że skutki uboczne są głównym źródłem błędów w aplikacjach.
 
-And the list goes on and on. Any interaction with the world outside of a function is a side effect, which is a fact that may prompt you to suspect the practicality of programming without them. The philosophy of functional programming postulates that side effects are a primary cause of incorrect behavior.
+To jednak nie jest tak, że mamy całkowity zakaz używania ich. Raczej chcielibyśmy umieć kontrolować skutki uboczne i z nich korzystać. Nauczymy się jak to zrobić, gdy dotrzemy do funktorów i monad w przyszłych rozdziałach, a na razie postarajmy się trzymać te podstępne funkcje ze skutkami ubocznymi z dala od naszych czystych funkcji.
 
-It is not that we're forbidden to use them, rather we want to contain them and run them in a controlled way. We'll learn how to do this when we get to functors and monads in later chapters, but for now, let's try to keep these insidious functions separate from our pure ones.
+Skutki uboczne dyskwalifikują funkcję z bycia *czystą*. Ma to sens: czyste funkcje, z definicji, muszą zwracać zawsze ten sam wynik dla takich samych danych, a tego po prostu nie można zagwarantować, jeśli funkcja dodatkowo korzysta ze stanu dookoła niej.
 
-Side effects disqualify a function from being *pure*. And it makes sense: pure functions, by definition, must always return the same output given the same input, which is not possible to guarantee when dealing with matters outside our local function.
+Skupmy się na tym, dlaczego tak bardzo zależy nam na tym, żeby funkcja zwracała ten sam wynik dla tego samego wejścia. Nakładaj mundurek, rzucimy okiem na matematykę na poziomie gimnazjum (gimby znajo).
 
-Let's take a closer look at why we insist on the same output per input. Pop your collars, we're going to look at some 8th grade math.
+## Matematyka z gimnazjum
 
-## 8th Grade Math
+Za epodreczniki.pl:
 
-From mathisfun.com:
+> Funkcją f ze zbioru X w zbiór Y nazywamy przyporządkowanie
+> w którym każdemu elementowi zbioru X przyporządkowany jest dokładnie jeden element zbioru Y.
 
-> A function is a special relationship between values:
-> Each of its input values gives back exactly one output value.
-
-In other words, it's just a relation between two values: the input and the output. Though each input has exactly one output, that output doesn't necessarily have to be unique per input. Below shows a diagram of a perfectly valid function from `x` to `y`;
+Innymi słowy, funkcja to relacja pomiędzy dwoma wartościami: wejściem a wyjściem. Każda dana wejściowa na pewno ma dokładnie jeden wynik, to jednak ten sam wynik może się powtarzać dla wielu różnych argumentów. Poniżej diagram całkowicie poprawnej funkcji z `x` do `y`:
 
 <img src="images/function-sets.gif" alt="function sets" />(https://www.mathsisfun.com/sets/function.html)
 
-To contrast, the following diagram shows a relation that is *not* a function since the input value `5` points to several outputs:
+Natomiast kolejny diagram przedstawia relację, która *nie* jest funkcją, gdyż wejściu `5` przyporządkowane jest kilka wyników:
 
 <img src="images/relation-not-function.gif" alt="relation not function" />(https://www.mathsisfun.com/sets/function.html)
 
-Functions can be described as a set of pairs with the position (input, output): `[(1,2), (3,6), (5,10)]` (It appears this function doubles its input).
+Funkcje można również zapisać jako zbiór par (wejście, wyjście): `[(1,2), (3,6), (5,10)]` (wygląda na to, że akurat ta funkcja podwaja podany argument).
 
-Or perhaps a table:
-<table> <tr> <th>Input</th> <th>Output</th> </tr> <tr> <td>1</td> <td>2</td> </tr> <tr> <td>2</td> <td>4</td> </tr> <tr> <td>3</td> <td>6</td> </tr> </table>
+Można też przedstawić ją jako tabelkę:
+<table> <tr> <th>Wejście</th> <th>Wyjście</th> </tr> <tr> <td>1</td> <td>2</td> </tr> <tr> <td>2</td> <td>4</td> </tr> <tr> <td>3</td> <td>6</td> </tr> </table>
 
-Or even as a graph with `x` as the input and `y` as the output:
+A nawet jako wykres, w którym `x` jest wejściem, a `y` rezultatem:
 
 <img src="images/fn_graph.png" width="300" height="300" alt="function graph" />
 
-
-There's no need for implementation details if the input dictates the output. Since functions are simply mappings of input to output, one could simply jot down object literals and run them with `[]` instead of `()`.
+Nie ma nawet potrzeby zagłębiania się w szczegóły implementacyjne jeśli to dane wejściowe determinują rezultat. Skoro funkcja to zwykłe mapowanie z wejścia na wyjście, to moglibyśmy równie dobrze użyć literałów obiektów i `[]` zamiast `()`:
 
 ```js
 const toLowerCase = {
@@ -129,29 +124,29 @@ const isPrime = {
 isPrime[3]; // true
 ```
 
-Of course, you might want to calculate instead of hand writing things out, but this illustrates a different way to think about functions. (You may be thinking "what about functions with multiple arguments?". Indeed, that presents a bit of an inconvenience when thinking in terms of mathematics. For now, we can bundle them up in an array or just think of the `arguments` object as the input. When we learn about *currying*, we'll see how we can directly model the mathematical definition of a function.)
+Oczywiście, możesz chcieć wyliczyć wynik zamiast zapisywać ręcznie wszystkie możliwości, ale chciałem Ci pokazaż inny sposób myślenia o funkcjach. (Jeśli zastanawiasz się teraz „a co z funkcjami, które przyjmują wiele argumentów?”, to już odpowiadam. Rzeczywiście może to rodzić dla nas pewne problemy, gdy będziemy myśleć o funkcjach na gruncie matematyki. Na tym etapie załóżmy, że funkcje wielu argumentów przyjmują po prostu tablicę wartości (albo obiekt `arguments`). Gdy poznamy pojęcie *rozwijania funkcji* (ang. _currying_ na cześć matematyka Haskella Curry'ego), to stanie się jasne, w jaki sposób można matematycznie opisać takie funkcje)
 
-Here comes the dramatic reveal: Pure functions *are* mathematical functions and they're what functional programming is all about. Programming with these little angels can provide huge benefits. Let's look at some reasons why we're willing to go to great lengths to preserve purity.
+Ujawnię teraz dramatyczną prawdę: czyste funkcje *są* matematycznymi funkcjami i to wszystko o co chodzi w programowaniu funkcyjnym. Programowanie z wykorzystaniem tych słodkich aniołków przynosi nam ogromne benefity. Zastanówmy się, jakie są powody, dla których jesteśmy w stanie wkładać tyle wysiłku w zachowanie czystości.
 
-## The Case for Purity
+## Sprawa czystości
 
-### Cacheable
+### Zapamiętywnanie (cache)
 
-For starters, pure functions can always be cached by input. This is typically done using a technique called memoization:
+Na początek zwróćmy uwagę, że w przypadku czystych funkcji zawsze można _cache'ować_ wyniki na podstawie argumentów. Zwyczajowo nazywa się to memoizacją:
 
 ```js
 const squareNumber = memoize(x => x * x);
 
 squareNumber(4); // 16
 
-squareNumber(4); // 16, returns cache for input 4
+squareNumber(4); // 16, cache dla 4
 
 squareNumber(5); // 25
 
-squareNumber(5); // 25, returns cache for input 5
+squareNumber(5); // 25, cache dla 5
 ```
 
-Here is a simplified implementation, though there are plenty of more robust versions available.
+Poniżej prosta implementacja. Łatwo znaleźć też znacznie bardziej rozbudowane.
 
 ```js
 const memoize = (f) => {
@@ -165,65 +160,65 @@ const memoize = (f) => {
 };
 ```
 
-Something to note is that you can transform some impure functions into pure ones by delaying evaluation:
+Warto też zanotować, że nieczyste funkcje można zamienić w czyste funkcje przez odwleczenie ich wykonania i zapakowanie w jeszcze jedną funkcję:
 
 ```js
 const pureHttpCall = memoize((url, params) => () => $.getJSON(url, params));
 ```
 
-The interesting thing here is that we don't actually make the http call - we instead return a function that will do so when called. This function is pure because it will always return the same output given the same input: the function that will make the particular http call given the `url` and `params`.
+Nie wykonujemy tutaj żadnego zapytania HTTP. Zamiast tego zwracamy funkcję, która dopiero wykona żądanie, gdy ją wywołamy. Ta funkcja jest czysta, gdyż zawsze zwróci ten sam wynik dla tych samych argumentów: zmemoizowaną funkcję, która wykona odpowiednie zapytanie HTTP używając `url` i `params`.
 
-Our `memoize` function works just fine, though it doesn't cache the results of the http call, rather it caches the generated function.
+Nasze `memoize` działa w porządku, chociaż nie zapamiętuje wyników żądań HTTP, tylko tworzone funkcje.
 
-This is not very useful yet, but we'll soon learn some tricks that will make it so. The takeaway is that we can cache every function no matter how destructive they seem.
+Nie jest to jeszcze jakoś superużyteczne, ale wkrótce poznamy triki, które sprawią, że ta wiedza nam się przyda. Na razie zapamiętaj jedno: możemy memoizować każdą funkcję, niezależnie od tego, co robi.
 
-### Portable / Self-documenting
+### Przenośna / Samodokumentująca
 
-Pure functions are completely self contained. Everything the function needs is handed to it on a silver platter. Ponder this for a moment... How might this be beneficial? For starters, a function's dependencies are explicit and therefore easier to see and understand - no funny business going on under the hood.
+Czyste funkcje są całkowicie samowystarczalne. Wszystko, czego funkcja potrzebuje zostaje jej dostarczone na srebrnej tacy. Moment, ale w jaki sposób to może być korzystne dla nas? No na przykład, wszystkie zależności danej funkcji są jasne, klarowne i od razu widoczne, a dzięki temu łatwiej ją zrozumieć – żadnych królików z kapelusza.
 
 ```js
-// impure
+// nieczysta
 const signUp = (attrs) => {
   const user = saveUser(attrs);
   welcomeUser(user);
 };
 
-// pure
+// czysta
 const signUp = (Db, Email, attrs) => () => {
   const user = saveUser(Db, attrs);
   welcomeUser(Email, user);
 };
 ```
 
-The example here demonstrates that the pure function must be honest about its dependencies and, as such, tell us exactly what it's up to. Just from its signature, we know that it will use a `Db`, `Email`, and `attrs` which should be telling to say the least.
+Przykład powyżej pokazuje, że czyste funkcje zawsze są szczere odnośnie tego, na czym im zależy i mówią dokładnie co mają zamiar robić. Tylko na podstawie samej deklaracji, wiemy, że ta funkcja będzie korzystała z `Db`, `Email` i `attrs`, a to jest, wydaje mi się, dość wymowne.
 
-We'll learn how to make functions like this pure without merely deferring evaluation, but the point should be clear that the pure form is much more informative than its sneaky impure counterpart which is up to who knows what.
+Nauczymy się, jak zamieniać nieczyste funkcje w czyste bez śmiesznego opóźniania wywołania, ale mam nadzieję, że już teraz jest dobrze widoczny fakt, że czysta funkcja jest znacznie bardziej czytelna i niesie ze sobą więcej informacji, niż chytry i nieczysty odpowiednik, który ma nie wiadomo co w planach.
 
-Something else to notice is that we're forced to "inject" dependencies, or pass them in as arguments, which makes our app much more flexible because we've parameterized our database or mail client or what have you (don't worry, we'll see a way to make this less tedious than it sounds). Should we choose to use a different Db we need only to call our function with it. Should we find ourselves writing a new application in which we'd like to reuse this reliable function, we simply give this function whatever `Db` and `Email` we have at the time.
+Inna warta uwagi kwestia to fakt, że jesteśmy niejako zmuszeni do „wstrzyknięcia” zależności (przekazania ich jako argumenty) co sprawia, że nasza aplikacja staje się znacznie bardziej elastyczna. Możemy parametryzować połączenie z bazą danych, albo klienta poczty, albo cokolwiek innego przed przekazaniem ich do funkcji (nie martw się, tylko na razie brzmi to jak kompletna nuda). Chcemy skorzystać z innej bazy danych? Wystarczy wywołać naszą funkcję z innym argumentem. Chcemy wykorzystać tę samą rzetelną funkcję w innym projekcie? No to po prostu przekażemy jej inne `Db` i inny `Email`.
 
-In a JavaScript setting, portability could mean serializing and sending functions over a socket. It could mean running all our app code in web workers. Portability is a powerful trait.
+Przenośność w JavaScripcie można oznaczać na przykład możliwość serializowania funkcji i przesłania ich w żądaniu. Albo wywołanie tego samego kodu w Web Workers. Przenośność to potężny przymiot.
 
-Contrary to "typical" methods and procedures in imperative programming rooted deep in their environment via state, dependencies, and available effects, pure functions can be run anywhere our hearts desire.
+W odróżnieniu od „typowych” metod i procedur w programowaniu imperatywnym, które są głęboko zakorzenione w swoim środowisku poprzez stan, zależności, skutki uboczne – czyste funkcje możemy przenosić i wywoływać gdzie nam w duszy gra.
 
-When was the last time you copied a method into a new app? One of my favorite quotes comes from Erlang creator, Joe Armstrong: "The problem with object-oriented languages is they’ve got all this implicit environment that they carry around with them. You wanted a banana but what you got was a gorilla holding the banana... and the entire jungle".
+Kiedy ostatni raz zdarzyło Ci się skopiować jakąś metodę do nowej aplikacji? Jeden z moich ulubionych cytatów pochodzi od twórcy języka Erlang, Joe Armstronga: „Problem z językami obiektowymi jest taki, że mają to całe ukryte środowisko, które noszą ze sobą. Chcesz banana, ale dostajesz goryla trzymającego banana… i całą dżunglę.” (ang. _"The problem with object-oriented languages is they’ve got all this implicit environment that they carry around with them. You wanted a banana but what you got was a gorilla holding the banana... and the entire jungle"_)
 
-### Testable
+### Testowalna
 
-Next, we come to realize pure functions make testing much easier. We don't have to mock a "real" payment gateway or setup and assert the state of the world after each test. We simply give the function input and assert output.
+Następnie, dochodzimy do wniosku, że testowanie czystych funkcji jest znacznie proste. Nie musimy _mockować_ żadnej bramki płatności albo tworzyć całego globalnego stanu przed każdym testem. Po prostu dajemy coś funkcji i sprawdzamy, czy rezultat jest poprawny.
 
-In fact, we find the functional community pioneering new test tools that can blast our functions with generated input and assert that properties hold on the output. It's beyond the scope of this book, but I strongly encourage you to search for and try *Quickcheck* - a testing tool that is tailored for a purely functional environment.
+Faktem jest, że to społeczność funkcyjna jest pionierem jeśli chodzi o nowe narzędzia do testowania, które mogą wymłócić nasze funkcje losowymi danymi i sprawdzić, czy wszystkie własności się zgadzają. To zdecydowanie wychodzi poza zakres niniejszej książki, ale bardzo mocno polecam Ci poszukać i spróbować *Quickcheck* – narzędzia do testowania, które zostało stworzone pod funkcyjne środowisko (nota od tłumacza: istnieje również wersja tej biblioteki do JavaScript i nazywa się *fast-check*).
 
-### Reasonable
+### Sensowna
 
-Many believe the biggest win when working with pure functions is *referential transparency*. A spot of code is referentially transparent when it can be substituted for its evaluated value without changing the behavior of the program.
+Wiele osób sądzi, że najważniejsza przy pracy z czystymi funkcjami jest *referential transparency* (nota od tłumacza: nie podejmuję się próby przetłumaczenia, gdyż przyniosłoby to więcej szkody niż pożytku). Fragment kodu nazywamy _referentially transparent_, gdy możemy go wykonać i podmienić na wynik bez zmiany zachowania aplikacji.
 
-Since pure functions don't have side effects, they can only influence the behavior of a program through their output values. Furthermore, since their output values can reliably be calculated using only their input values, pure functions will always preserve referential transparency. Let's see an example.
+Skoro czyste funkcje nie mają żadnych skutków ubocznych, to jedyny wpływ na program jaki mogą mieć, to poprzez swoje wyjście. Ponadto, skoro ich wyjście jest zawsze takie samo dla danego wejścia, to czyste funkcje zawsze zachowują cechę _referential transparency_. Przykładzik:
 
 
 ```js
 const { Map } = require('immutable');
 
-// Aliases: p = player, a = attacker, t = target
+// Aliasy: p = player, a = attacker, t = target
 const jobe = Map({ name: 'Jobe', hp: 20, team: 'red' });
 const michael = Map({ name: 'Michael', hp: 20, team: 'green' });
 const decrementHP = p => p.set('hp', p.get('hp') - 1);
@@ -233,45 +228,44 @@ const punch = (a, t) => (isSameTeam(a, t) ? t : decrementHP(t));
 punch(jobe, michael); // Map({name:'Michael', hp:19, team: 'green'})
 ```
 
-`decrementHP`, `isSameTeam` and `punch` are all pure and therefore referentially transparent. We can use a technique called *equational reasoning* wherein one substitutes "equals for equals" to reason about code. It's a bit like manually evaluating the code without taking into account the quirks of programmatic evaluation. Using referential transparency, let's play with this code a bit.
+`decrementHP`, `isSameTeam` i `punch` są czystymi funkcjami, a więc są _referentially transparent_. Możemy skorzystać z techniki zwanej *śledzeniem równania* (ang. _equantional reasoning_), w której podstawia się „równe za równe”, aby łatwiej rozumować na temat kodu. To trochę jakbyśmy w głowie próbowali wykonać kod bez brania pod uwagę dziwactw kompilatora. Korzystając z _referential transparency_, spróbujemy się pobawić i zastosować tę technikę na kodzie powyżej.
 
-First we'll inline the function `isSameTeam`.
+Najpierw otwórzmy funkcję `isSameTeam` i wstawmy jej kod bezpośrednio w `punch`:
 
 ```js
 const punch = (a, t) => (a.get('team') === t.get('team') ? t : decrementHP(t));
 ```
 
-Since our data is immutable, we can simply replace the teams with their actual value
+Wiemy, że nasze dane są niemutowalne, więc możemy podmienić `.get('team')` na wartości:
 
 ```js
 const punch = (a, t) => ('red' === 'green' ? t : decrementHP(t));
 ```
 
-We see that it is false in this case so we can remove the entire if branch
+Widzimy, że warunek nie jest spełniony, więc możemy pozbyć się całej pierwszej części funkcji:
 
 ```js
 const punch = (a, t) => decrementHP(t);
 ```
 
-And if we inline `decrementHP`, we see that, in this case, punch becomes a call to decrement the `hp` by 1.
+A teraz jeśli otworzymy i podmienimy `decrementHP` to zobaczymy, że, w tym przypadku, `punch` to tylko zmiana wartości `hp` o 1 w dół:
 
 ```js
 const punch = (a, t) => t.set('hp', t.get('hp') - 1);
 ```
 
-This ability to reason about code is terrific for refactoring and understanding code in general. In fact, we used this technique to refactor our flock of seagulls program. We used equational reasoning to harness the properties of addition and multiplication. Indeed, we'll be using these techniques throughout the book.
+Możliwość myślenia o kodzie w taki sposób jest niesamowicie przydatna do refaktoryzacji albo ogólnie przy próbie zrozumienia programu. Użyliśmy tej samej techniki, aby zrefaktorować naszą mewią funkcję w pierwszym rozdziale. Tam użyliśmy śledzenia równania, aby okiełznać własności dodawania i mnożenia. Tej techniki będziemy używać często dalej w książce.
 
-### Parallel Code
+### Kod równoległy
 
-Finally, and here's the coup de grâce, we can run any pure function in parallel since it does not need access to shared memory and it cannot, by definition, have a race condition due to some side effect.
+Wreszcie, oto _coup de grâce_, wszystkie czyste funkcje można uruchamiać równolegle, gdyż nie mają dostępu do współdzielonej pamięci i z definicji nie mogą mieć hazardów z powodu jakiegoś skutku ubocznego.
 
-This is very much possible in a server side js environment with threads as well as in the browser with web workers though current culture seems to avoid it due to complexity when dealing with impure functions.
+Jest to jak najbardziej możliwe po stronie serwera w wątkach (NodeJS) albo w przeglądarkach przez Web Workers, chociaż obecnie społeczność JS zdaje się tego tematu unikać ze względu na złożoność aplikacji przy równoległym uruchamianiu nieczystych funkcji.
 
+## Podsumowując
 
-## In Summary
+Wiemy czym są czyste funkcje i dlaczego my, funkcyjni programiści i funkcyjne programistki, wierzymy, że są wisienką na torcie programowania. Odtąd będziemy dążyć do pisania wyłącznie czystych funkcji. Potrzebujemy jeszcze kilku narzędzi, aby móc ten cel zrealizować w stu procentach, ale póki ich nie posiadamy, to po prostu będziemy oddzielać nieczyste funkcje od reszty czystego kodu.
 
-We've seen what pure functions are and why we, as functional programmers, believe they are the cat's evening wear. From this point on, we'll strive to write all our functions in a pure way. We'll require some extra tools to help us do so, but in the meantime, we'll try to separate the impure functions from the rest of the pure code.
-
-Writing programs with pure functions is a tad laborious without some extra tools in our belt. We have to juggle data by passing arguments all over the place, we're forbidden to use state, not to mention effects. How does one go about writing these masochistic programs? Let's acquire a new tool called curry.
+Pisanie całych programów z czystymi funkcjami jest ździebko męczące bez odpowiednich narzędzi pod ręką. Musimy żonglować danymi przekazując wszędzie wszystkie argumenty, zakazano nam używania stanu, o skutkach ubocznych nie wspominając. To wy tu tak żyjecie? Jak można pisać tak masochistyczny kod? Poznajmy nową zabawkę nazwaną curry.
 
 [Rozdział 04: Currying](ch04-pl.md)

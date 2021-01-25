@@ -1,7 +1,7 @@
 # Rozdział 02: Funkcje pierwszej klasy
 
 ## Szybki przegląd
-Kiedy mówimy, że funkcje są „pierwszej klasy” oznacza to, że są takie jak wszystko… Innymi słowy, „funkcja pierwszej klasy” oznacza „normalna funkcja”. Chodzi o to, że funkcje możemy traktować tak samo, jak każdy inny typ danych i nie ma w nich nic szczególnie wyjątkowego. Możemy je trzymać w tablicy, przekazywać jako parametry, przypisywać do zmiennych i co tam jeszcze chcesz.
+Kiedy mówimy, że funkcje są „pierwszej klasy” oznacza to, że są zwykłymi ludźmi, zawsze mówią „dzień dobry”… Innymi słowy, „funkcja pierwszej klasy” oznacza „normalna funkcja”. Chodzi o to, że funkcje możemy traktować tak samo, jak każdy inny typ danych i nie ma w nich nic szczególnie wyjątkowego. Możemy je trzymać w tablicy, przekazywać jako parametry, przypisywać do zmiennych i co tam jeszcze chcesz.
 
 To są podstawy JavaScriptu, ale warto o tym wspomnieć, gdyż szybkie wyszukanie na GitHubie pokazuje, że istnieje jakiś zbiorowy wykręt, albo może rozpowszechniona ignorancja, odnośnie tego konceptu. Może przykład?
 
@@ -83,7 +83,7 @@ const BlogController = {
 
 ## Dlaczego wolimy pierwszą klasę?
 
-Okej, no to przejdźmy do powodów, dla których preferujemy pracować z funkcjami pierwszej klasy. Jak widać w `getServerStuff` i `BlogController`, bardzo łatwo jest dodawać wartwy abstrakcji, które niczego nie wnoszą i tylko zwiększją ilość niepotrzebnego kodu, który trzeba utrzymywać.
+Okej, no to przejdźmy do powodów, dla których preferujemy pracować z funkcjami pierwszej klasy. Jak widać w `getServerStuff` i `BlogController`, bardzo łatwo jest dodawać wartwy abstrakcji, które niczego nie wnoszą i tylko zwiększają ilość niepotrzebnego kodu, który trzeba utrzymywać.
 
 Dodatkowo, jeśli taka niepotrzebnie zapakowana funkcja w funkcji zostanie zmodyfikowana, to będziemy zmuszeni zmienić również tę zewnętrzną funkcję.
 
@@ -91,7 +91,7 @@ Dodatkowo, jeśli taka niepotrzebnie zapakowana funkcja w funkcji zostanie zmody
 httpGet('/post/2', json => renderPost(json));
 ```
 
-Przykładowo, jeśli `httpGet` miałoby się zmienić i przekazywać opcjonalny błąd `err`, musielibyśmy wróćić do tego kodu i poprawić nasz „klej”.
+Jeśli `httpGet` miałoby się zmienić i przekazywać opcjonalny błąd `err`, musielibyśmy wrócić do tego kodu i poprawić nasze spoiwo.
 
 ```js
 // wracamy do każdego wywołania httpGet w całej aplikacji tylko po to, żeby dodać err
@@ -128,11 +128,11 @@ const fs = require('fs');
 // straszne
 fs.readFile('freaky_friday.txt', Db.save);
 
-// mniej starszne
+// mniej straszne
 fs.readFile('freaky_friday.txt', Db.save.bind(Db));
 ```
 
-`Db.save` na zawsze związane z `Db` może teraz dowolnie używać swojego syfiastego kodu z `prototype`. Unikam używania `this` jak osób bez maseczek w czasie pandemii. Naprawdę obejdziemy się bez `this` pisząc funkcyjny kod. Jednakże, gdy używa się również innych bibliotek, to trzeba zgodzić się na to szaleństwo.
+`Db.save` na zawsze związane z `Db` może teraz dowolnie używać swojego syfiastego kodu z `prototype`. Unikam `this` jak osób bez maseczek w czasie pandemii. Naprawdę obejdziemy się bez `this` pisząc funkcyjny kod. Jednakże, gdy używa się również innych bibliotek, to trzeba zgodzić się na to szaleństwo.
 
 Niektórzy twierdzą, że `this` jest niezbędne do optymalizowania prędkości działania kodu. Jeśli jesteś z mikrooptymalizującego sortu, to proszę, zamknij tę książkę. Jeśli nie możesz już dostać zwrotu pieniędzy, to może chociaż uda Ci się ją wymienić na coś bardziej niskopoziomowego.
 
