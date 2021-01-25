@@ -8,7 +8,7 @@ Nie będą zakładać, że posiadasz jakiekolwiek doświadczenie z programowanie
 
 Celem tego rozdziału jest uświadomienie Ci, jaki jest powód pisania kodu funkcyjnie i czego poszukujemy. Aby zrozumieć kolejne rozdziały, konieczne jest rozumienie co to w ogóle oznacza, że program jest *funkcyjny*. Bez tego możemy łatwo znaleźć się w sytuacji, w której piszemy kod bez głębszego przemyślenia, po prostu unikając używania obiektów, a to nie będzie najmądrzejsze przedsięwzięcie. Musimy widzieć jasno i wyraźnie cele i powody pisania kodu w stylu funkcyjnym.
 
-Są pewne ogólne zasady programowania; różne skrótowce, które mają nas prowadzić przez meandry tworzenia aplikacji: DRY (_don't repeat yourself_, czyli niepowtarzaj kodu), YAGNI (_ya ain't gonna need it_, czyli nie twórz rzeczy niepotrzebnych),  _loose coupling high cohesion_ (mało silnych powiązań, ale dużo spójności), _the principle of least surprise_ (zasada tworzenia kodu, który nie zaskakuje), SRP (_single responsibility principle_, czyli nigdy nie powinno być więcej niż jednego powodu do zmiany danego kodu) i tak dalej…
+Są pewne ogólne zasady programowania; różne skrótowce, które mają nas prowadzić przez meandry tworzenia aplikacji: DRY (_don't repeat yourself_, czyli nie powtarzaj kodu), YAGNI (_ya ain't gonna need it_, czyli nie twórz rzeczy niepotrzebnych),  _loose coupling high cohesion_ (mało silnych powiązań, ale dużo spójności), _the principle of least surprise_ (zasada tworzenia kodu, który nie zaskakuje), SRP (_single responsibility principle_, czyli nigdy nie powinno być więcej niż jednego powodu do zmiany danego kodu) i tak dalej…
 
 Nie będę Cię zanudzał próbując wypisać każdą złotą zasadę, o której słyszałem przez te wszystkie lata… Chodzi mi tylko o to, że te wszystkie pojęcia nadal mają sens w programowaniu funkcyjnym, mimo że nie są one naszym głównym celem.
 
@@ -114,7 +114,7 @@ multiply(stadoB, add(stadoA, stadoA));
 
 Genialnie! Nie musieliśmy pisać ani kawałeczka nowego kodu poza wywołaniami naszych funkcji. Zdefiniowaliśmy wcześniej `add` i `multiply` dla spójności tego przykładu, ale biblioteki standardowe większości języków programowania na pewno mają te funkcje już wbudowane.
 
-Możesz teraz myśleć „przeinaczyłeś argumenty przeciwnika, aby łatwiej było ci go zaatakować i pokazałeś taki matematyczny przykład” albo „prawdziwe programy tak nie wyglądają i nie da się ich tak łatwo przekształcać”. Wybrałem ten przykład celowo, bo większość z nas rozumie dodawanie i mnożenie, więc prosto było dostrzeżec, że matematyka jest tutaj dla nas bardzo przydatna.
+Możesz teraz myśleć „przeinaczyłeś argumenty przeciwnika, aby łatwiej było ci go zaatakować i pokazałeś taki matematyczny przykład” albo „prawdziwe programy tak nie wyglądają i nie da się ich tak łatwo przekształcać”. Wybrałem ten przykład celowo, bo większość z nas rozumie dodawanie i mnożenie, więc prosto było dostrzec, że matematyka jest tutaj dla nas bardzo przydatna.
 
 Nie rozpaczaj! W tej książce znajdziesz fragmenty teorii kategorii, teorii zbiorów, rachunku lambda i osiągniesz podobny poziom prostoty w prawdziwych, z życia wziętych programach, jak w aplikacji dla mew. Ale to nie oznacza, że konieczna jest magisterka z matematyki! Wszystko będzie się wydawało naturalne i proste, zupełnie jak korzystanie z nowego „normalnego” frameworka lub API.
 
