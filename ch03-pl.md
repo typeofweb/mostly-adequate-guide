@@ -51,11 +51,11 @@ Natomiast czysta postać `checkAge` jest całkowicie samowystarczalna.
 
 ## Skutki uboczne mogą…
 
-Przyjrzyjmy się bliżej tym „skutkom ubocznym”, aby poprawić naszą intuicję. Czymże jest jest ten nikczemny *skutek uboczny* wspomniany w definicji *czystej funkcji*? Skutkiem (albo efektem) nazwiemy wszystko, co nie jest bezpośrednio związane z wyliczeniem wyniku funkcji.
+Przyjrzyjmy się bliżej tym „skutkom ubocznym”, aby poprawić naszą intuicję. Czymże jest ten nikczemny *skutek uboczny* wspomniany w definicji *czystej funkcji*? Skutkiem (albo efektem) nazwiemy wszystko, co nie jest bezpośrednio związane z wyliczeniem wyniku funkcji.
 
 Nie ma nic inherentnie złego w samych skutkach i będziemy ich używać na każdym kroku w nadchodzących rozdziałach. To słówko *uboczny* niesie ze sobą negatywne skojarzenia. Woda sama w sobie nie zawsze jest siedliskiem komarów. Dopiero „stojąca woda” staje się idealnym środowiskiem dla milionów krwiopijców. Zapewniam cię, że efekty *uboczne* są podobnym terenem lęgowym dla wszelkiego robactwa w Twoich programach.
 
-> *Skutek uboczny* to zmiana stanu systemu lub *obserwowalna interakcja* ze światem zewnętrznym, która ma miejsce podczast obliczania wyniku funkcji.
+> *Skutek uboczny* to zmiana stanu systemu lub *obserwowalna interakcja* ze światem zewnętrznym, która ma miejsce podczas obliczania wyniku funkcji.
 
 Skutki uboczne mogą zawierać, ale nie ograniczają się do:
 
@@ -124,7 +124,7 @@ const isPrime = {
 isPrime[3]; // true
 ```
 
-Oczywiście, możesz chcieć wyliczyć wynik zamiast zapisywać ręcznie wszystkie możliwości, ale chciałem Ci pokazaż inny sposób myślenia o funkcjach. (Jeśli zastanawiasz się teraz „a co z funkcjami, które przyjmują wiele argumentów?”, to już odpowiadam. Rzeczywiście może to rodzić dla nas pewne problemy, gdy będziemy myśleć o funkcjach na gruncie matematyki. Na tym etapie załóżmy, że funkcje wielu argumentów przyjmują po prostu tablicę wartości (albo obiekt `arguments`). Gdy poznamy pojęcie *rozwijania funkcji* (ang. _currying_ na cześć matematyka Haskella Curry'ego), to stanie się jasne, w jaki sposób można matematycznie opisać takie funkcje)
+Oczywiście, możesz chcieć wyliczyć wynik zamiast zapisywać ręcznie wszystkie możliwości, ale chciałem Ci pokazaż inny sposób myślenia o funkcjach. (Jeśli zastanawiasz się teraz „a co z funkcjami, które przyjmują wiele argumentów?”, to już odpowiadam. Rzeczywiście może to rodzić dla nas pewne problemy, gdy będziemy myśleć o funkcjach na gruncie matematyki. Na tym etapie załóżmy, że funkcje wielu argumentów przyjmują po prostu tablicę wartości [albo obiekt `arguments`]. Gdy poznamy pojęcie *rozwijania funkcji* [ang. _currying_ na cześć matematyka Haskella Curry'ego], to stanie się jasne, w jaki sposób można matematycznie opisać takie funkcje).
 
 Ujawnię teraz dramatyczną prawdę: czyste funkcje *są* matematycznymi funkcjami i to wszystko o co chodzi w programowaniu funkcyjnym. Programowanie z wykorzystaniem tych słodkich aniołków przynosi nam ogromne benefity. Zastanówmy się, jakie są powody, dla których jesteśmy w stanie wkładać tyle wysiłku w zachowanie czystości.
 
@@ -204,7 +204,7 @@ Kiedy ostatni raz zdarzyło Ci się skopiować jakąś metodę do nowej aplikacj
 
 ### Testowalna
 
-Następnie, dochodzimy do wniosku, że testowanie czystych funkcji jest znacznie proste. Nie musimy _mockować_ żadnej bramki płatności albo tworzyć całego globalnego stanu przed każdym testem. Po prostu dajemy coś funkcji i sprawdzamy, czy rezultat jest poprawny.
+Następnie, dochodzimy do wniosku, że testowanie czystych funkcji jest znacznie prostsze. Nie musimy _mockować_ żadnej bramki płatności albo tworzyć całego globalnego stanu przed każdym testem. Po prostu dajemy coś funkcji i sprawdzamy, czy rezultat jest poprawny.
 
 Faktem jest, że to społeczność funkcyjna jest pionierem jeśli chodzi o nowe narzędzia do testowania, które mogą wymłócić nasze funkcje losowymi danymi i sprawdzić, czy wszystkie własności się zgadzają. To zdecydowanie wychodzi poza zakres niniejszej książki, ale bardzo mocno polecam Ci poszukać i spróbować *Quickcheck* – narzędzia do testowania, które zostało stworzone pod funkcyjne środowisko (nota od tłumacza: istnieje również wersja tej biblioteki do JavaScript i nazywa się *fast-check*).
 

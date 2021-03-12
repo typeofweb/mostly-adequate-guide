@@ -104,7 +104,7 @@ Ah tak, stare poczciwe zasady matematyki mogą nam się przydać. Nie martw si�
 // Oryginalnie
 add(multiply(stadoB, add(stadoA, stadoC)), multiply(stadoA, stadoB));
 
-// Element netrualny (stadoC) sprawia, że możemy usunąć zbędne add
+// Element neutralny (stadoC) sprawia, że możemy usunąć zbędne add
 // (add(stadoA, stadoC) == stadoA)
 add(multiply(stadoB, stadoA), multiply(stadoA, stadoB));
 

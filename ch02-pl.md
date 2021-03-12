@@ -83,7 +83,7 @@ const BlogController = {
 
 ## Dlaczego wolimy pierwszą klasę?
 
-Okej, no to przejdźmy do powodów, dla których preferujemy pracować z funkcjami pierwszej klasy. Jak widać w `getServerStuff` i `BlogController`, bardzo łatwo jest dodawać wartwy abstrakcji, które niczego nie wnoszą i tylko zwiększają ilość niepotrzebnego kodu, który trzeba utrzymywać.
+Okej, no to przejdźmy do powodów, dla których preferujemy pracować z funkcjami pierwszej klasy. Jak widać w `getServerStuff` i `BlogController`, bardzo łatwo jest dodawać warstwy abstrakcji, które niczego nie wnoszą i tylko zwiększają ilość niepotrzebnego kodu, który trzeba utrzymywać.
 
 Dodatkowo, jeśli taka niepotrzebnie zapakowana funkcja w funkcji zostanie zmodyfikowana, to będziemy zmuszeni zmienić również tę zewnętrzną funkcję.
 
