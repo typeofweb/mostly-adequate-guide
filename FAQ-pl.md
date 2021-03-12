@@ -103,8 +103,8 @@ A glossary/vade mecum will come at the end to synthesize all these notions.
 > see [#198]
 
 Most of the time, those methods are defined in specific vendor libraries such as `ramda` or
-`underscore`. You should also have a look at [Appendix A](./appendix_a-pl.md), 
-[Appendix B](./appendix_b-pl.md) and [Appendix C](./appendix_c-pl.md) in which we define
+`underscore`. You should also have a look at [Dodatek A](./appendix_a-pl.md), 
+[Dodatek B](./appendix_b-pl.md) and [Dodatek C](./appendix_c-pl.md) in which we define
 several implementations used for the exercises. Those functions are really
 common in functional programming and even though their implementations may vary a bit, their
 meanings remain fairly consistent between libraries.

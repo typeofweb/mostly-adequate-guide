@@ -1,4 +1,4 @@
-# Appendix B: Algebraic Structures Support
+# Dodatek B: Algebraic Structures Support
 
 In this appendix, you'll find some basic JavaScript implementations of various algebraic
 structures described in the book. Keep in mind that these implementations may not be the fastest or the
@@ -7,7 +7,7 @@ most efficient implementation out there; they *solely serve an educational purpo
 In order to find structures that are more production-ready, have a peek at [folktale](http://folktale.origamitower.com/)
 or [fantasy-land](https://github.com/fantasyland).
 
-Note that some methods also refer to functions defined in the [Appendix A](./appendix_a-pl.md)
+Note that some methods also refer to functions defined in the [Dodatek A](./appendix_a-pl.md)
 
 ## Compose
 

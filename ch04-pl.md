@@ -1,11 +1,12 @@
 # Rozdział 04: Currying
 
 ## Can't Live If Livin' Is without You
-My Dad once explained how there are certain things one can live without until one acquires them. A microwave is one such thing. Smart phones, another. The older folks among us will remember a fulfilling life sans internet. For me, currying is on this list.
 
-The concept is simple: You can call a function with fewer arguments than it expects. It returns a function that takes the remaining arguments.
+Ojciec kiedyś wyjaśnił mi, że są pewne rzeczy, bez których można żyć tylko dopóki się ich nie ma. Mikrofalówka jest jedną z takich rzeczy. Smartfony, też. Starszyzna pamięta satysfakcjonujące życie w erze przed Internetem. Na mojej liście znajduje się currying.
 
-You can choose to call it all at once or simply feed in each argument piecemeal.
+Zamysł jest prosty: Wywołujesz funkcję z mniejszą liczbą argumentów, niż ta potrzebuje. Zwrócona zostaje funkcja, która przyjmie brakujące argumenty.
+
+Możesz wywołać funkcję ze wszystkimi argumentami, albo karmić ją po kawałeczku.
 
 ```js
 const add = x => y => x + y;
@@ -16,10 +17,9 @@ increment(2); // 3
 addTen(2); // 12
 ```
 
-Here we've made a function `add` that takes one argument and returns a function. By calling it, the returned function remembers the first argument from then on via the closure. Calling it with both arguments all at once is a bit of a pain, however, so we can use a special helper function called `curry` to make defining and calling functions like this easier.
+Stworzyliśmy funkcję `add`, która przyjmuje jeden argument i zwraca kolejną funkcję. Po wywołaniu jej, zwrócona funkcja „pamięta” pierwszy argument dzięki domknięciu. Wywołanie `add` z dwoma argumentami na raz trochę boli, jednak możemy wykorzystać specjalną funkcję o nazwie `curry`, która znacząco ułatwi nam deklarowanie takich i podobnych funkcji.
 
-Let's set up a few curried functions for our enjoyment. From now on, we'll summon our `curry`
-function defined in the [Appendix A - Essential Function Support](./appendix_a-pl.md). 
+Stwórzmy kilka funkcji, na których zastosowano `curry` – od teraz jako `curry` będziemy przyjmować funkcję zdefiniowaną w [Dodatek A - Essential Function Support](./appendix_a-pl.md). 
 
 ```js
 const match = curry((what, s) => s.match(what));
@@ -28,9 +28,9 @@ const filter = curry((f, xs) => xs.filter(f));
 const map = curry((f, xs) => xs.map(f));
 ```
 
-The pattern I've followed is a simple, but important one. I've strategically positioned the data we're operating on (String, Array) as the last argument. It will become clear as to why upon use.
+Zwróć uwagę na wzorzec, który tutaj zastosowałem, gdyż jest on istotny. Strategicznie umieściłem dane, na których chcemy operować (string, tablica) jako ostatni argument. Za chwilę stanie się jasne, dlaczego to ważne.
 
-(The syntax `/r/g`  is a regular expression that means _match every letter 'r'_. Read [more about regular expressions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions) if you like.)
+(Zapis `/r/g` to wyrażenie regularne, które pasuje do każdej litery "r". Więcej o [wyrażeniach regularnych](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions).)
 
 ```js
 match(/r/g, 'hello world'); // [ 'r' ]
@@ -49,7 +49,7 @@ const censored = noVowels('*'); // x => x.replace(/[aeiou]/ig, '*')
 censored('Chocolate Rain'); // 'Ch*c*l*t* R**n'
 ```
 
-What's demonstrated here is the ability to "pre-load" a function with an argument or two in order to receive a new function that remembers those arguments.
+Co się tu dzieje? Otóż pokazuję możliwość „załadowania” funkcji argumentem albo dwoma, aby otrzymać nową funkcję, która zapamięta te argumenty.
 
 I encourage you to clone the Mostly Adequate repository (`git clone
 https://github.com/MostlyAdequate/mostly-adequate-guide.git`), copy the code above and have a
@@ -104,8 +104,8 @@ Throughout the book, you might encounter an 'Exercises' section like this one. E
 done directly in-browser provided you're reading from [gitbook](https://mostly-adequate.gitbooks.io/mostly-adequate-guide) (recommended).
 
 Note that, for all exercises of the book, you always have a handful of helper functions
-available in the global scope. Hence, anything that is defined in [Appendix A](./appendix_a-pl.md),
-[Appendix B](./appendix_b-pl.md) and [Appendix C](./appendix_c-pl.md) is available for you! And, as
+available in the global scope. Hence, anything that is defined in [Dodatek A](./appendix_a-pl.md),
+[Dodatek B](./appendix_b-pl.md) and [Dodatek C](./appendix_c-pl.md) is available for you! And, as
 if it wasn't enough, some exercises will also define functions specific to the problem
 they present; as a matter of fact, consider them available as well.
 

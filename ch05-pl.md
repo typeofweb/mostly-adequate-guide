@@ -100,7 +100,7 @@ There's no right or wrong answers - we're just plugging our legos together in wh
 
 Pointfree style means never having to say your data. Excuse me. It means functions that never mention the data upon which they operate. First class functions, currying, and composition all play well together to create this style.
 
-> Hint: Pointfree versions of `replace` & `toLowerCase` are defined in the [Appendix C -
+> Hint: Pointfree versions of `replace` & `toLowerCase` are defined in the [Dodatek C -
 > Pointfree Utilities](./appendix_c-pl.md). Do not hesitate to have a peek!
 
 ```js

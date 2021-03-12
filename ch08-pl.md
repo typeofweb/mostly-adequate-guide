@@ -87,7 +87,7 @@ What reason could we possibly have for bottling up a value and using `map` to ge
 
 `Container` is fairly boring. In fact, it is usually called `Identity` and has about the same impact as our `id` function (again there is a mathematical connection we'll look at when the time is right). However, there are other functors, that is, container-like types that have a proper `map` function, which can provide useful behaviour whilst mapping. Let's define one now.
 
-> A complete implementation is given in the [Appendix B](./appendix_b-pl.md#Maybe)
+> A complete implementation is given in the [Dodatek B](./appendix_b-pl.md#Maybe)
 
 ```js
 class Maybe {
@@ -233,7 +233,7 @@ I'd be remiss if I didn't mention that the "real" implementation will split `May
 
 It may come as a shock, but `throw/catch` is not very pure. When an error is thrown, instead of returning an output value, we sound the alarms! The function attacks, spewing thousands of 0s and 1s like shields and spears in an electric battle against our intruding input. With our new friend `Either`, we can do better than to declare war on input, we can respond with a polite message. Let's take a look:
 
-> A complete implementation is given in the [Appendix B](./appendix_b-pl.md#Either)
+> A complete implementation is given in the [Dodatek B](./appendix_b-pl.md#Either)
 
 ```js
 class Either {

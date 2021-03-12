@@ -1,4 +1,4 @@
-# Appendix C: Pointfree Utilities
+# Dodatek C: Pointfree Utilities
 
 In this appendix, you'll find pointfree versions of rather classic JavaScript functions
 described in the book. All of the following functions are seemingly available in exercises, as
@@ -8,7 +8,7 @@ the most efficient implementation out there; they *solely serve an educational p
 In order to find functions that are more production-ready, have a peek at
 [ramda](https://ramdajs.com/), [lodash](https://lodash.com/), or [folktale](http://folktale.origamitower.com/).
 
-Note that functions refer to the `curry` & `compose` functions defined in [Appendix A](./appendix_a-pl.md)
+Note that functions refer to the `curry` & `compose` functions defined in [Dodatek A](./appendix_a-pl.md)
 
 ## add 
 
